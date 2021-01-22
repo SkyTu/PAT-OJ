@@ -1,0 +1,21 @@
+#define _CRT_SECURE_NO_WARNINGS
+# include <stdio.h>
+# include <stdio.h>
+void main()
+{
+    int num;
+    int time=0;
+    scanf("%d",&num);
+    time = Callatz(num,time);
+    printf("\n%d\n",time);
+}
+int Callatz(int num,int time)
+{
+    printf("%d",num);
+    if(num == 1)
+        return time;
+    else if(num%2)
+        Callatz((3*num+1)/2,++time);
+    else
+        Callatz(num/2,++time);
+}
