@@ -1,0 +1,94 @@
+一、题目
+卡拉兹(Callatz)猜想已经在1001中给出了描述。在这个题目里，情况稍微有些复杂。
+
+当我们验证卡拉兹猜想的时候，为了避免重复计算，可以记录下递推过程中遇到的每一个数。例如对 n=3 进行验证的时候，我们需要计算
+3、5、8、4、2、1，则当我们对 n=5、8、4、2 进行验证的时候，就可以直接判定卡拉兹猜想的真伪，而不需要重复计算，因为这 4
+个数已经在验证3的时候遇到过了，我们称 5、8、4、2 是被 3“覆盖”的数。我们称一个数列中的某个数 n 为“关键数”，如果 n
+不能被数列中的其他数字所覆盖。
+
+现在给定一系列待验证的数字，我们只需要验证其中的几个关键数，就可以不必再重复验证余下的数字。你的任务就是找出这些关键数字，并按从大到小的顺序输出它们。
+
+输入格式： 每个测试输入包含 1 个测试用例，第 1 行给出一个正整数 K (<100)，第 2 行给出 K 个互不相同的待验证的正整数 n
+(1<n≤100)的值，数字间用空格隔开。
+
+输出格式： 每个测试用例的输出占一行，按从大到小的顺序输出关键数字。数字间用 1 个空格隔开，但一行中最后一个数字后没有空格。
+
+输入样例： 6 3 5 6 7 8 11 输出样例： 7 6
+
+二、分析
+一共有两个数组：
+1）二维数组valided_num，用于存储不同数字对应的序列，用到的数字对应的位置为1
+		例如：第一轮中，用到了3，那么valided_num[0][3]=1
+2）当前计算得到的关键数key_num，后序会不断地更新
+		例如：第一轮3是关键数，所以key_num[3] = 1
+
+遍历输入数字时：
+1）若当前数字在之前的数组里存在，则该数字必然不是关键数字
+2）若当前数字在之前数组里不存在，运算Callatz直至结束
+	计算当前输入数字的valided_num，并遍历key_num，若key_num中有数存在于valided_num，则置0
+
+最后按照要求倒序输出即可
+**注意代码中部分索引值重用
+
+
+#define _CRT_SECURE_NO_WARNINGS
+# include <stdio.h>
+# define MAX 101 //由于用0,1标记是否用到，所以要101个数组来保证索引值为100时数组不会越界
+
+
+void Callatz(int num, int* used_num)
+{
+    if(num<MAX)
+	    *(used_num + num) = 1;
+	if (num == 1)
+		return;
+	else if (num % 2)
+		Callatz((3 * num + 1) / 2, used_num);
+	else
+		Callatz(num / 2, used_num);
+}
+int main()
+{
+	int count = 0, index = 0,num, cal_num, judge;
+	int valided_num[MAX][MAX] = { 0 };
+	int key_num[MAX] = {0};
+    int result[MAX];
+	scanf("%d", &num);
+	while(count < num)
+	{
+		judge = 1; // 判断是否在之前计算过了
+		index = 0;
+		scanf("%d", &cal_num);
+		while(index < count)
+		{
+			if (valided_num[index++][cal_num])
+			{
+				judge = 0; //在之前的任意序列中则立即结束
+				break;
+			}
+		}
+		if (judge)
+		{
+			index = 0;
+			Callatz(cal_num, valided_num[count]);
+			while (index++ < MAX)
+			{
+				if (valided_num[count][index] && key_num[index])
+					key_num[index] = 0;
+			}
+			key_num[cal_num] = 1;
+		}
+        count++;
+	}
+    count = 0;
+	for (int index = 0; index < 101; index++)
+	{
+		if (key_num[index])
+            result[count++] = index;
+	}
+    while(count-->1)
+    {
+        printf("%d ",result[count]);
+    }
+    printf("%d",result[count]);
+}
