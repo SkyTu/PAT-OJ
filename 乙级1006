@@ -1,0 +1,27 @@
+这个题目很基础，没有太多的讲解啦
+
+# include <stdio.h>
+int main()
+{
+    int num, hundred, ten, index = 0;
+    scanf("%d",&num);
+    hundred = num/100;
+    ten = num/10;
+    num = num%10;
+    if(hundred>0){
+        while(index++<hundred)
+            printf("B");
+    }
+    if(ten>0){
+        index = 0;
+        if(ten>9)
+            ten = ten%10;
+        while(index++<ten)
+            printf("S");
+    }
+    index = 0;
+    while(index++<num)
+    {
+        printf("%d",index);
+    }
+}
