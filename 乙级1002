@@ -1,0 +1,73 @@
+1002 写出这个数 (20分)
+读入一个正整数 n，计算其各位数字之和，用汉语拼音写出和的每一位数字。
+
+输入格式： 每个测试输入包含 1 个测试用例，即给出自然数 n 的值。这里保证 n 小于 10​100 ​​ 。
+输出格式： 在一行内输出 n 的各位数字之和的每一位，拼音数字间有 1 空格，但一行中最后一个拼音数字后没有空格。
+
+输入样例： 1234567890987654321123456789 输出样例： yi san wu
+
+分析:
+(1)10100 过大，直接当作数字存的话即使用long long也存不下，因此只得考虑当作字符一个一个读，所以使用getchar()，假设获得了ch = ‘1’，则num = ch - ‘0’即可求得当前位置的数字。
+(2)将数字的每位数值累加求和过后，进行循环取余，利用switch即可将数字1转化为拼音’yi’，但是问题在于循环取余后会导致输出的拼音为倒叙，例如135，通过循环取余，可以获得每一位为5,3,1，因此还需要再倒转顺序，因此考虑使用char类型的指针数组，以方便倒转顺序
+
+
+# include <stdio.h>
+int main()
+{
+    char num;
+    char* result[100];//对于字符串，通常用指针来存储，注意""和''分别是字符串和字母
+    int sum,index = 0; //index是为了倒叙
+    while((num = getchar())!='\n')
+    {
+        sum+=num -'0';
+    }
+    while(sum>9)
+    {
+        output_number(sum%10,index++,result);
+        sum/=10;
+    }
+    output_number(sum,index,result);
+    while(index>0)
+    {
+        printf("%s ",result[index--]);
+    }
+    printf("%s",result[index--]); //注意输出的空格问题
+    return 0;
+}
+
+void output_number(int num,int index,char*result[]) //转数字为拼音
+{
+    switch(num)
+        {
+            case 0:
+                result[index] = "ling"; //注意双引号
+                break; //注意break，否则后续都会打印出来
+            case 1:
+                result[index] ="yi";
+                break;
+            case 2:
+                result[index] ="er";
+                break;
+            case 3:
+                result[index] ="san";
+                break;
+            case 4:
+                result[index] ="si";
+                break;
+            case 5:
+                result[index] ="wu";
+                break;
+            case 6:
+                result[index] ="liu";
+                break;
+            case 7:
+                result[index] ="qi";
+                break;
+            case 8:
+                result[index] ="ba";
+                break;
+            case 9:
+                result[index] ="jiu";
+                break;
+        }
+}
