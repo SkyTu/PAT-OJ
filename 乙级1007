@@ -1,0 +1,42 @@
+一、题目
+
+让我们定义d_n 为：d_n = p_n+1 −p_n ，其中p_i 是第i个素数。显然有d_1 =1，且对于n>1有d_n 是偶数。“素数对猜想”认为“存在无穷多对相邻且差为2的素数”。
+现给定任意正整数N(<10^5)，请计算不超过N的满足猜想的素数对的个数。
+
+输入格式: 输入在一行给出正整数N。
+
+输出格式: 在一行中输出不超过N的满足猜想的素数对的个数。
+
+输入样例: 20 输出样例: 4
+
+二、分析
+1）判断素数只需要计算到开平方根就好
+2）注意1不是素数就可以啦
+
+#include <stdio.h>
+#include <math.h>
+#define TRUE 1
+#define FALSE 0
+typedef int bool;
+
+bool isPrime(int num) {
+	int devide = 1;
+	while ( devide++ <= sqrt(num)) {
+		if (num % devide == 0) {
+			return FALSE;
+		}
+	}
+	return TRUE;
+}
+
+int main()
+{
+	int count = 0, max;
+	scanf("%d", &max);
+	while (max-2 > 1) {
+		if (isPrime(max) && isPrime(max - 2))
+			count++;
+        max--;
+	}
+	printf("%d", count);
+}
